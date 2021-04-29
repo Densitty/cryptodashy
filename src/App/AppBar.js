@@ -1,5 +1,6 @@
 import React from "react";
 import styled, { css } from "styled-components";
+import { AppContext } from "./AppProvider";
 
 const Bar = styled.div`
   display: grid;
@@ -16,6 +17,7 @@ const ControlButtonElement = styled.div`
   ${(props) =>
     props.active &&
     css`
+      color: #f3d798;
       text-shadow: 0px 0px 60px #03ff03;
     `}
 `;
@@ -24,11 +26,20 @@ const CharToUpperCase = (word) => {
   return word.charAt(0).toUpperCase() + word.substring(1);
 };
 
-const ControlButton = ({ name, active }) => {
+const ControlButton = (props) => {
+  // console.log(props);
+  const { name } = props;
   return (
-    <ControlButtonElement active={active}>
-      {CharToUpperCase(name)}
-    </ControlButtonElement>
+    <AppContext.Consumer>
+      {({ page, changePage }) => (
+        <ControlButtonElement
+          active={page === name}
+          onClick={() => changePage(name)}
+        >
+          {CharToUpperCase(name)}
+        </ControlButtonElement>
+      )}
+    </AppContext.Consumer>
   );
 };
 
