@@ -15,7 +15,7 @@ const CoinGrid = () => {
         return (
           <CoinGridStyled>
             {Object.keys(coinList).map((coin, index) => {
-              console.log(coin);
+              // console.log(coin);
               return <div key={index}>{coin}</div>;
             })}
           </CoinGridStyled>
