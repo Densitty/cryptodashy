@@ -37,19 +37,20 @@ export class AppProvider extends React.Component {
     const response = await cc.coinList();
     const coinList = response.Data;
     this.setState({ coinList });
-    console.log(coinList);
+    /* any property not set initially but later set, e.g coinList, is assumed to have an initial state value of null */
+    // console.log(coinList);
   };
 
   savedSettings = () => {
     let cryptoData = JSON.parse(localStorage.getItem("cryptoDashy"));
-    /* if we are visiting the site for the first time, then we get to the settings page */
+    /* if we are visiting the site for the first time, then we get directed to the settings page */
     if (!cryptoData) {
       return {
         page: "settings",
         firstVisit: true,
       };
     }
-
+    // if the visitor is a regular visitor, return an empty object
     return {};
   };
 

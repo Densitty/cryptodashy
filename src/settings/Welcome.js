@@ -11,6 +11,7 @@ const Welcome = () => {
           </div>
         ) : null
       }
+      {/* {(value) => console.log(value)} */}
     </AppContext.Consumer>
   );
 };
