@@ -5,7 +5,7 @@ const CoinImage = ({ coin, style }) => {
     <img
       src={`http://cryptocompare.com/${coin.ImageUrl}`}
       alt={coin.CoinSymbol}
-      style={style || { height: "50px", marginTop: "40px" }}
+      style={style || { height: "50px", marginTop: "20px" }}
     />
   );
 };
