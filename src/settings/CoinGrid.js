@@ -6,27 +6,44 @@ import CoinTile from "./CoinTile";
 
 export const CoinGridStyled = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   grid-gap: 15px;
   margin-top: 40px;
 `;
 
-const getCoinsToDisplay = (coinList, topSection) => {
+function getLowerSectionCoins(coinList, filteredCoins) {
+  // if we have the filteredCoins, render them or render the first 100 coins if not available
+  return (
+    (filteredCoins && Object.keys(filteredCoins)) ||
+    Object.keys(coinList).slice(0, 100)
+  );
+}
+
+const getCoinsToDisplay = (coinList, topSection, favorites, filteredCoins) => {
+  // console.log(topSection);
   // return only 100 coins instead of the thousands the API returns
-  return Object.keys(coinList).slice(0, topSection ? 10 : 100);
+  // to display favorites if we are in the top section
+  return topSection ? favorites : getLowerSectionCoins(coinList, filteredCoins);
 };
 
 const CoinGrid = ({ topSection }) => {
   return (
     <AppContext.Consumer>
-      {({ coinList }) => {
+      {({ coinList, favorites, filteredCoins }) => {
         // console.log(coinList);
         return (
           <CoinGridStyled>
-            {getCoinsToDisplay(coinList, topSection).map((coin, index) => {
-              /* console.log(coin); */ // name of coin diplayed
-              /* return <SelectableTile key={index}>{coin}</SelectableTile>; */
-              return <CoinTile topSection={topSection} coinKey={coin} />;
+            {getCoinsToDisplay(
+              coinList,
+              topSection,
+              favorites,
+              filteredCoins
+            ).map((coin, index) => {
+              // console.log(filteredCoins); // name of coin diplayed
+              /* console.log(coin); */ /* return <SelectableTile key={index}>{coin}</SelectableTile>; */
+              return (
+                <CoinTile key={index} topSection={topSection} coinKey={coin} />
+              );
             })}
           </CoinGridStyled>
         );

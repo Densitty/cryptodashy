@@ -3,6 +3,7 @@ import Welcome from "./Welcome";
 import ConfirmButton from "./ConfirmButton";
 import Page from "../Shared/Page";
 import CoinGrid from "./CoinGrid";
+import Search from "./Search";
 
 const index = () => {
   return (
@@ -10,6 +11,7 @@ const index = () => {
       <Welcome />
       <CoinGrid topSection />
       <ConfirmButton />
+      <Search />
       <CoinGrid />
     </Page>
   );
