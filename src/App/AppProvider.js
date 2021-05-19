@@ -50,10 +50,15 @@ export class AppProvider extends React.Component {
   };
 
   makeRegularVisitor = () => {
-    this.setState({
-      firstVisit: false,
-      page: "dashboard",
-    });
+    this.setState(
+      {
+        firstVisit: false,
+        page: "dashboard",
+      },
+      () => {
+        this.fetchPrices();
+      }
+    );
     localStorage.setItem(
       "cryptoDashy",
       JSON.stringify({
@@ -64,6 +69,7 @@ export class AppProvider extends React.Component {
 
   componentDidMount = () => {
     this.fetchCoins();
+    this.fetchPrices();
   };
 
   fetchCoins = async () => {
@@ -72,6 +78,41 @@ export class AppProvider extends React.Component {
     this.setState({ coinList });
     /* any property not set initially but later set, e.g coinList, is assumed to have an initial state value of null */
     // console.log(coinList);
+  };
+
+  prices = async () => {
+    let returnData = [];
+    for (let i = 0; i < this.state.favorites.length; i++) {
+      try {
+        const priceData = await cc.priceFull(this.state.favorites[i], "USD");
+        console.log(priceData);
+        returnData.push(priceData);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+    return returnData;
+  };
+
+  /* fetchPrices = async () => {
+    const prices = await this.prices();
+    console.log(prices);
+    this.setState({ prices });
+  }; */
+
+  fetchPrices = async () => {
+    /* if we are visiting the site for the first time, have no price displayed */
+    if (this.state.firstVisit) {
+      return;
+    }
+    if (this.state.firstVisit) return;
+    let prices = await this.prices();
+    // We must filter the empty price objects (not in the lecture)
+    prices = prices.filter((price) => {
+      console.log(Object.keys(price).length);
+      return Object.keys(price).length;
+    });
+    this.setState({ prices });
   };
 
   savedSettings = () => {
