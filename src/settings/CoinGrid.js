@@ -1,7 +1,7 @@
 import React from "react";
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { AppContext } from "../App/AppProvider";
-import { SelectableTile } from "../Shared/Tile";
+// import { SelectableTile } from "../Shared/Tile";
 import CoinTile from "./CoinTile";
 
 export const CoinGridStyled = styled.div`
@@ -42,7 +42,7 @@ const CoinGrid = ({ topSection }) => {
               // console.log(filteredCoins); // name of coin diplayed
               /* console.log(coin); */ /* return <SelectableTile key={index}>{coin}</SelectableTile>; */
               return (
-                <CoinTile key={index} topSection={topSection} coinKey={coin} />
+                <CoinTile key={coin} topSection={topSection} coinKey={coin} />
               );
             })}
           </CoinGridStyled>

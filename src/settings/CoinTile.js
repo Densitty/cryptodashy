@@ -30,7 +30,6 @@ const coinTile = ({ coinKey, topSection }) => {
         // console.log(coinKey);
         return (
           <TileClass
-            key={coin.Id}
             onClick={clickCoinHandler(topSection, coinKey, addCoin, removeCoin)}
           >
             <CoinHeaderGrid
