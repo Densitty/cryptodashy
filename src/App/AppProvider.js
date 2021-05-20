@@ -15,10 +15,11 @@ export class AppProvider extends React.Component {
       ...this.savedSettings(),
       /* setPage needs to be set here before it can be used in Consumer */
       changePage: this.changePageHandler,
-      confirmFavorites: this.makeRegularVisitor,
       addCoin: this.addCoin,
       removeCoin: this.removeCoin,
+      confirmFavorites: this.makeRegularVisitor,
       isInFavorites: this.isInFavorites,
+      setCurrentFavorite: this.setCurrentFavorite,
       setFilteredCoins: this.setFilteredCoins,
     };
   }
@@ -43,6 +44,22 @@ export class AppProvider extends React.Component {
     });
   };
 
+  setCurrentFavorite = (symbol) => {
+    console.log(this.state.favorites.filter((favorite) => favorite === symbol));
+
+    this.setState({
+      currentFavorite: symbol,
+    });
+
+    // reset the localStorage to reflect the change
+    localStorage.setItem(
+      "cryptoDashy",
+      JSON.stringify({
+        ...JSON.parse(localStorage.getItem("cryptoDashy")),
+        currentFavorite: symbol,
+      })
+    );
+  };
   // disable coin already in favorites to be add more than once
   isInFavorites = (key) => {
     /* console.log(this.state.favorites.includes(key)); */
@@ -50,10 +67,13 @@ export class AppProvider extends React.Component {
   };
 
   makeRegularVisitor = () => {
+    let currentFavorite = this.state.favorites[0];
+    console.log(this.state.favorites[0]);
     this.setState(
       {
         firstVisit: false,
         page: "dashboard",
+        currentFavorite,
       },
       () => {
         this.fetchPrices();
@@ -63,6 +83,7 @@ export class AppProvider extends React.Component {
       "cryptoDashy",
       JSON.stringify({
         favorites: this.state.favorites,
+        currentFavorite,
       })
     );
   };
@@ -85,7 +106,7 @@ export class AppProvider extends React.Component {
     for (let i = 0; i < this.state.favorites.length; i++) {
       try {
         const priceData = await cc.priceFull(this.state.favorites[i], "USD");
-        console.log(priceData);
+        /* console.log(priceData); */
         returnData.push(priceData);
       } catch (e) {
         console.log(e);
@@ -109,7 +130,7 @@ export class AppProvider extends React.Component {
     let prices = await this.prices();
     // We must filter the empty price objects (not in the lecture)
     prices = prices.filter((price) => {
-      console.log(Object.keys(price).length);
+      // console.log(Object.keys(price).length);
       return Object.keys(price).length;
     });
     this.setState({ prices });
@@ -125,9 +146,9 @@ export class AppProvider extends React.Component {
       };
     }
 
-    let { favorites } = cryptoData;
+    let { favorites, currentFavorite } = cryptoData;
     // when favorite coins are selected, override the default favorites (i.e this.state.favorites)
-    return { favorites: favorites };
+    return { favorites: favorites, currentFavorite: currentFavorite };
   };
 
   changePageHandler = (page) => {

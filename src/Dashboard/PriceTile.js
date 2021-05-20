@@ -1,8 +1,9 @@
 import React from "react";
 import styled, { css } from "styled-components";
 import { SelectableTile } from "../Shared/Tile";
-import { fontSize3, fontSizeBig } from "../Shared/Styles";
+import { fontSize3, fontSizeBig, greenBoxShadow } from "../Shared/Styles";
 import { CoinHeaderGridStyled } from "../settings/CoinHeaderGrid";
+import { AppContext } from "../App/AppProvider";
 
 const PriceTileStyled = styled(SelectableTile)`
   ${(props) =>
@@ -13,6 +14,12 @@ const PriceTileStyled = styled(SelectableTile)`
       grid-template-columns: repeat(3, 1fr);
       grid-gap: 5px;
       justify-items: right;
+    `}
+  ${(props) =>
+    props.currentFavorite &&
+    css`
+      ${greenBoxShadow};
+      pointer-events: none;
     `}
 `;
 
@@ -52,10 +59,13 @@ const ChangePercent = ({ data }) => {
   );
 };
 
-function Price({ symbol, data }) {
+function Price({ symbol, data, currentFavorite, setCurrentFavorite }) {
   // console.log(data);
   return (
-    <PriceTileStyled>
+    <PriceTileStyled
+      currentFavorite={currentFavorite}
+      onClick={setCurrentFavorite}
+    >
       <CoinHeaderGridStyled>
         <div>{symbol}</div>
         <ChangePercent data={data} />
@@ -66,9 +76,18 @@ function Price({ symbol, data }) {
 }
 
 /* component to display the lower row of Price component differently */
-const PriceCompact = ({ symbol, data, compact }) => {
+const PriceCompact = ({
+  symbol,
+  data,
+  currentFavorite,
+  setCurrentFavorite,
+}) => {
   return (
-    <PriceTileStyled compact>
+    <PriceTileStyled
+      compact
+      currentFavorite={currentFavorite}
+      onClick={setCurrentFavorite}
+    >
       <JustifyLeft>{symbol}</JustifyLeft>
       <ChangePercent data={data} />
       <div>${numberFormat(data.PRICE)}</div>
@@ -77,14 +96,27 @@ const PriceCompact = ({ symbol, data, compact }) => {
 };
 
 const PriceTile = ({ price, index }) => {
-  // console.log(price);
-  const symbol = Object.keys(price);
+  // console.log(price); // console.log(price[symbol]["USD"])
+  const symbol = Object.keys(price)[0];
   const data = price[symbol]["USD"];
   // let coinPrice = data.PRICE;
   // console.log(coinPrice);
   let TileClass = index < 5 ? Price : PriceCompact;
   return (
-    <TileClass symbol={symbol} data={data} compact={index >= 5}></TileClass>
+    <AppContext.Consumer>
+      {({ currentFavorite, setCurrentFavorite }) => {
+        // console.log(currentFavorite === symbol);
+        return (
+          <TileClass
+            symbol={symbol}
+            data={data}
+            compact={index >= 5}
+            currentFavorite={currentFavorite === symbol}
+            setCurrentFavorite={() => setCurrentFavorite(symbol)}
+          ></TileClass>
+        );
+      }}
+    </AppContext.Consumer>
   );
 };
 
