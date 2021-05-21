@@ -16,7 +16,7 @@ const PriceGrid = () => {
       {({ prices }) => (
         <PriceDisplay>
           {prices.map((price, index) => {
-            return <PriceTile index={index} price={price} />;
+            return <PriceTile key={index} index={index} price={price} />;
           })}
         </PriceDisplay>
       )}

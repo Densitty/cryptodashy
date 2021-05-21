@@ -53,7 +53,7 @@ const ChangePercent = ({ data }) => {
   return (
     <JustifyRight>
       <ChangePercentColor red={data.CHANGEPCT24HOUR < 0}>
-        {numberFormat(data.CHANGEPCT24HOUR)}
+        {numberFormat(data.CHANGEPCT24HOUR)}%
       </ChangePercentColor>
     </JustifyRight>
   );

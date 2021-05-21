@@ -1,4 +1,4 @@
-export default function (historical) {
+const Highcharts = (historical) => {
   return {
     title: {
       text: "",
@@ -44,4 +44,6 @@ export default function (historical) {
       ],
     },
   };
-}
+};
+
+export default Highcharts;

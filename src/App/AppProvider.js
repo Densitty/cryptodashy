@@ -1,8 +1,10 @@
 import React from "react";
+import moment from "moment";
 
 const cc = require("cryptocompare");
 
 const MAX_FAVORITES = 10;
+const TIME_UNITS = 10;
 
 export const AppContext = React.createContext();
 
@@ -47,9 +49,15 @@ export class AppProvider extends React.Component {
   setCurrentFavorite = (symbol) => {
     console.log(this.state.favorites.filter((favorite) => favorite === symbol));
 
-    this.setState({
-      currentFavorite: symbol,
-    });
+    this.setState(
+      {
+        currentFavorite: symbol,
+        // to disable the chart from rendering the previous historicalData first before the new one is rendered upon changing the favorite coin, set
+        historical: null,
+      },
+      // fetch the historicalData when current favorite is set
+      this.fetchHistorical
+    );
 
     // reset the localStorage to reflect the change
     localStorage.setItem(
@@ -74,9 +82,13 @@ export class AppProvider extends React.Component {
         firstVisit: false,
         page: "dashboard",
         currentFavorite,
+        price: null, // reset the state variable when changing favorite
+        historical: null, // coins
       },
       () => {
+        // once we confirm the favorite coins, fetch the prices of the coins and the historical data
         this.fetchPrices();
+        this.fetchHistorical();
       }
     );
     localStorage.setItem(
@@ -91,6 +103,7 @@ export class AppProvider extends React.Component {
   componentDidMount = () => {
     this.fetchCoins();
     this.fetchPrices();
+    this.fetchHistorical();
   };
 
   fetchCoins = async () => {
@@ -99,6 +112,45 @@ export class AppProvider extends React.Component {
     this.setState({ coinList });
     /* any property not set initially but later set, e.g coinList, is assumed to have an initial state value of null */
     // console.log(coinList);
+  };
+
+  fetchHistorical = async () => {
+    /* if we are visiting the site for the first time, that means there are no favorite coins; return from the function */
+    if (this.state.firstVisit) {
+      return;
+    }
+    let results = await this.historical();
+    // console.log(results);
+    let historical = [
+      {
+        name: this.state.currentFavorite,
+        data: results.map((ticker, index) => {
+          return [
+            moment()
+              .subtract({ months: TIME_UNITS - index })
+              .valueOf(),
+            ticker.USD,
+          ];
+        }),
+      },
+    ];
+    this.setState({ historical });
+  };
+
+  historical = () => {
+    let promises = [];
+    for (let units = TIME_UNITS; units > 0; units--) {
+      promises.push(
+        cc.priceHistorical(
+          this.state.currentFavorite,
+          ["USD"],
+          moment().subtract({ months: units }).toDate()
+        )
+      );
+    }
+
+    /* since data is being fetched from an API and that data is going to be used to process the information for prices in 10mths duration, we await the request to be resolved */
+    return Promise.all(promises);
   };
 
   prices = async () => {

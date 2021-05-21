@@ -15,7 +15,7 @@ const CoinSpotlight = () => {
         return (
           <Tile>
             <SpotlightName>
-              <h2>{coinList[currentFavorite]["CoinName"]}</h2>
+              {coinList[currentFavorite]["CoinName"]}
             </SpotlightName>
             <CoinImage spotLight coin={coinList[currentFavorite]} />
           </Tile>
