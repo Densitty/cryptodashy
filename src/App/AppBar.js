@@ -20,6 +20,11 @@ const ControlButtonElement = styled.div`
       color: #f3d798;
       text-shadow: 0px 0px 60px #03ff03;
     `}
+  ${(props) =>
+    props.hidden &&
+    css`
+      display: none;
+    `}
 `;
 
 const CharToUpperCase = (word) => {
@@ -31,10 +36,11 @@ const ControlButton = (props) => {
   const { name } = props;
   return (
     <AppContext.Consumer>
-      {({ page, changePage }) => (
+      {({ firstVisit, page, changePage }) => (
         <ControlButtonElement
           active={page === name}
           onClick={() => changePage(name)}
+          hidden={firstVisit && name === "dashboard"}
         >
           {CharToUpperCase(name)}
         </ControlButtonElement>
