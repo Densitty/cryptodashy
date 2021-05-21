@@ -1,3 +1,5 @@
+import { lightTheme } from "../Shared/Styles";
+
 const theme = {
   colors: [
     "#DDDF0D",
@@ -13,11 +15,11 @@ const theme = {
     "#aaeeee",
   ],
   chart: {
-    backgroundColor: "#061a44",
+    backgroundColor: lightTheme ? "white" : "#061a44",
     borderColor: "#000000",
     borderWidth: 0,
     className: "dark-container",
-    plotBackgroundColor: "#061a44",
+    plotBackgroundColor: lightTheme ? "white" : "#061a44",
     plotBorderColor: "#CCCCCC",
     plotBorderWidth: 0,
   },
