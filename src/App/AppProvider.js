@@ -49,7 +49,7 @@ export class AppProvider extends React.Component {
   };
 
   setCurrentFavorite = (symbol) => {
-    console.log(this.state.favorites.filter((favorite) => favorite === symbol));
+    // console.log(this.state.favorites.filter((favorite) => favorite === symbol));
 
     this.setState(
       {
@@ -78,7 +78,7 @@ export class AppProvider extends React.Component {
 
   makeRegularVisitor = () => {
     let currentFavorite = this.state.favorites[0];
-    console.log(this.state.favorites[0]);
+    // console.log(this.state.favorites[0]);
     this.setState(
       {
         firstVisit: false,
