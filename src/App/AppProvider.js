@@ -219,6 +219,7 @@ export class AppProvider extends React.Component {
   changeChartSelect = (value) => {
     // console.log(value);
     this.setState(
+      // historical: null to enable chart refresh of historical data on each timeInterval change
       { timeInterval: value, historical: null },
       this.fetchHistorical
     );
